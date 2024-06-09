@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Pillars Form</title>
-    <!-- Include jsPDF library directly in the head -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
     <style>
         :root {
             --background-color-light: #ffffff;
@@ -226,6 +224,17 @@
             });
         });
 
+        // Dynamically load the jsPDF library
+        function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Script load error for ${url}`));
+                document.head.append(script);
+            });
+        }
+
         async function generatePDF() {
             console.log("Generate PDF function called"); // Debug log
             const form = document.getElementById('pillarsForm');
@@ -277,120 +286,119 @@
                 return;
             }
 
-            // Ensure jsPDF is loaded
-            if (typeof window.jspdf === 'undefined') {
-                console.error("jsPDF is not defined. Please ensure the library is loaded correctly.");
-                return;
-            }
-
-            const { jsPDF } = window.jspdf;
-            if (!jsPDF) {
-                console.error("jsPDF is not available after destructuring.");
-                return;
-            }
-
-            const doc = new jsPDF();
-
-            // Add logo
-            const logo = new Image();
-            logo.src = 'teka.png'; // Path to your logo file
-            logo.onload = () => {
-                const logoOriginalWidth = logo.width;
-                const logoOriginalHeight = logo.height;
-                const logoMaxWidth = 30; // Adjust the maximum width
-                const logoMaxHeight = 30; // Adjust the maximum height
-                let logoWidth = logoMaxWidth;
-                let logoHeight = logoMaxHeight;
-
-                // Calculate the new dimensions based on the original aspect ratio
-                if (logoOriginalWidth > logoOriginalHeight) {
-                    logoHeight = (logoMaxWidth / logoOriginalWidth) * logoOriginalHeight;
-                } else {
-                    logoWidth = (logoMaxHeight / logoOriginalHeight) * logoOriginalWidth;
+            try {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js');
+                const { jsPDF } = window.jspdf;
+                if (!jsPDF) {
+                    console.error("jsPDF is not available after loading the script.");
+                    return;
                 }
 
-                const logoX = (doc.internal.pageSize.getWidth() - logoWidth) / 2;
-                const logoY = 10;
-                doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+                const doc = new jsPDF();
 
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const today = new Date();
-                const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                // Add logo
+                const logo = new Image();
+                logo.src = 'teka.png'; // Path to your logo file
+                logo.onload = () => {
+                    const logoOriginalWidth = logo.width;
+                    const logoOriginalHeight = logo.height;
+                    const logoMaxWidth = 30; // Adjust the maximum width
+                    const logoMaxHeight = 30; // Adjust the maximum height
+                    let logoWidth = logoMaxWidth;
+                    let logoHeight = logoMaxHeight;
 
-                // Add title
-                doc.setFontSize(12); // Title font size
-                doc.setFont('helvetica', 'bold');
-                doc.text("The Pillar System", pageWidth / 2, logoY + logoHeight + 10, { align: 'center' });
-
-                // Add header
-                doc.setFontSize(8); // Reduced font size for header
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Date: ${formattedDate}`, pageWidth / 2, logoY + logoHeight + 20, { align: 'center' });
-
-                let y = logoY + logoHeight + 30; // Start below the logo, title, and header
-
-                pillarsData.forEach((pillar, index) => {
-                    if (y + 60 > pageHeight) { // Create new page if content overflows
-                        doc.addPage();
-                        y = 20;
+                    // Calculate the new dimensions based on the original aspect ratio
+                    if (logoOriginalWidth > logoOriginalHeight) {
+                        logoHeight = (logoMaxWidth / logoOriginalWidth) * logoOriginalHeight;
+                    } else {
+                        logoWidth = (logoMaxHeight / logoOriginalHeight) * logoOriginalWidth;
                     }
 
+                    const logoX = (doc.internal.pageSize.getWidth() - logoWidth) / 2;
+                    const logoY = 10;
+                    doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+                    const today = new Date();
+                    const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+                    // Add title
+                    doc.setFontSize(12); // Title font size
                     doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(10);
-                    doc.text(`Pillar: ${pillar.title}`, 20, y);
-                    y += 10; // Reduced spacing
+                    doc.text("The Pillar System", pageWidth / 2, logoY + logoHeight + 10, { align: 'center' });
 
+                    // Add header
+                    doc.setFontSize(8); // Reduced font size for header
                     doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(8);
-                    doc.text(`Rating: ${pillar.rating}`, 20, y);
+                    doc.text(`Date: ${formattedDate}`, pageWidth / 2, logoY + logoHeight + 20, { align: 'center' });
 
-                    // Draw a simple visual representation of the rating with rounded corners
-                    const ratingBarWidth = 50; // Reduced width
-                    const filledWidth = ratingBarWidth * (pillar.rating / 10);
-                    doc.setDrawColor(0, 0, 0);
-                    doc.setFillColor(211, 211, 211);
-                    roundedRect(doc, 100, y - 6, ratingBarWidth, 5, 2); // Adjusted size and added radius
-                    doc.setFillColor(127, 101, 246); // Changed color to #7F65F6
-                    roundedRect(doc, 100, y - 6, filledWidth, 5, 2); // Adjusted size and added radius
+                    let y = logoY + logoHeight + 30; // Start below the logo, title, and header
 
-                    y += 10; // Reduced spacing
-                    doc.text(`Current State:`, 20, y);
-                    y += 10; // Reduced spacing
-                    doc.setFont('helvetica', 'italic');
-                    doc.text(doc.splitTextToSize(pillar.current, pageWidth - 40), 20, y);
-                    y += doc.getTextDimensions(pillar.current).h / 2 + 10; // Adjusted spacing and size
+                    pillarsData.forEach((pillar, index) => {
+                        if (y + 60 > pageHeight) { // Create new page if content overflows
+                            doc.addPage();
+                            y = 20;
+                        }
 
-                    doc.setFont('helvetica', 'normal');
-                    doc.text(`Ideal State:`, 20, y);
-                    y += 10; // Reduced spacing
-                    doc.setFont('helvetica', 'italic');
-                    doc.text(doc.splitTextToSize(pillar.ideal, pageWidth - 40), 20, y);
-                    y += doc.getTextDimensions(pillar.ideal).h / 2 + 20; // Adjusted spacing and size
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(10);
+                        doc.text(`Pillar: ${pillar.title}`, 20, y);
+                        y += 10; // Reduced spacing
 
-                    // Add horizontal line
-                    y += 10;
-                    doc.setDrawColor(200, 200, 200); // Light gray line color
-                    doc.line(10, y, pageWidth - 10, y); // Draw line from margin to margin
-                    y += 10;
-                });
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(8);
+                        doc.text(`Rating: ${pillar.rating}`, 20, y);
 
-                // Add footer
-                const pageCount = doc.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    doc.setFontSize(8);
-                    doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, {
-                        align: 'center'
+                        // Draw a simple visual representation of the rating with rounded corners
+                        const ratingBarWidth = 50; // Reduced width
+                        const filledWidth = ratingBarWidth * (pillar.rating / 10);
+                        doc.setDrawColor(0, 0, 0);
+                        doc.setFillColor(211, 211, 211);
+                        roundedRect(doc, 100, y - 6, ratingBarWidth, 5, 2); // Adjusted size and added radius
+                        doc.setFillColor(127, 101, 246); // Changed color to #7F65F6
+                        roundedRect(doc, 100, y - 6, filledWidth, 5, 2); // Adjusted size and added radius
+
+                        y += 10; // Reduced spacing
+                        doc.text(`Current State:`, 20, y);
+                        y += 10; // Reduced spacing
+                        doc.setFont('helvetica', 'italic');
+                        doc.text(doc.splitTextToSize(pillar.current, pageWidth - 40), 20, y);
+                        y += doc.getTextDimensions(pillar.current).h / 2 + 10; // Adjusted spacing and size
+
+                        doc.setFont('helvetica', 'normal');
+                        doc.text(`Ideal State:`, 20, y);
+                        y += 10; // Reduced spacing
+                        doc.setFont('helvetica', 'italic');
+                        doc.text(doc.splitTextToSize(pillar.ideal, pageWidth - 40), 20, y);
+                        y += doc.getTextDimensions(pillar.ideal).h / 2 + 20; // Adjusted spacing and size
+
+                        // Add horizontal line
+                        y += 10;
+                        doc.setDrawColor(200, 200, 200); // Light gray line color
+                        doc.line(10, y, pageWidth - 10, y); // Draw line from margin to margin
+                        y += 10;
                     });
+
+                    // Add footer
+                    const pageCount = doc.internal.getNumberOfPages();
+                    for (let i = 1; i <= pageCount; i++) {
+                        doc.setPage(i);
+                        doc.setFontSize(8);
+                        doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, {
+                            align: 'center'
+                        });
+                    }
+
+                    doc.save(`Pillars (${formattedDate}).pdf`);
+                };
+
+                function roundedRect(doc, x, y, width, height, radius) {
+                    doc.setDrawColor(211, 211, 211);
+                    doc.roundedRect(x, y, width, height, radius, radius, 'FD');
                 }
-
-                doc.save(`Pillars (${formattedDate}).pdf`);
-            };
-
-            function roundedRect(doc, x, y, width, height, radius) {
-                doc.setDrawColor(211, 211, 211);
-                doc.roundedRect(x, y, width, height, radius, radius, 'FD');
+            } catch (error) {
+                console.error("Error loading jsPDF library:", error);
             }
         }
     </script>

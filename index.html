@@ -7,170 +7,136 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-    --background-color-light: #ffffff;
-    --background-color-dark: #181818;
-    --text-color-light: #000000;
-    --text-color-dark: #ffffff;
-    --accent-color-light: #f0f0f0;
-    --accent-color-dark: #242424;
-}
+            --background-color-dark: #181818;
+            --text-color-dark: #ffffff;
+            --accent-color-dark: #242424;
+        }
 
-body.light-mode {
-    background-color: var(--background-color-light);
-    color: var(--text-color-light);
-}
+        body {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-body.dark-mode {
-    background-color: var(--background-color-dark);
-    color: var(--text-color-dark);
-}
+        .container {
+            background-color: var(--accent-color-dark);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            transition: background-color 0.3s;
+            position: relative;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    transition: background-color 0.3s, color 0.3s;
-}
+        h1 {
+            display: flex;
+            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-.container {
-    background-color: var(--accent-color-light);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
-    transition: background-color 0.3s;
-    position: relative;
-}
+        .pillar {
+            margin-bottom: 20px;
+        }
 
-body.dark-mode .container {
-    background-color: var(--accent-color-dark);
-}
+        .pillar-title {
+            margin-bottom: 10px;
+        }
 
-h1 {
-    display: flex;
-    justify-content: space-between;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-.pillar {
-    margin-bottom: 20px;
-}
+        .rating-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
 
-.pillar-title {
-    margin-bottom: 10px;
-}
+        .rating-button {
+            padding: 10px; /* Original padding */
+            background-color: #f0f0f0;
+            color: #272727;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 30px; /* Original width */
+            text-align: center;
+            transition: box-shadow 0.3s;
+            font-size: 14px; /* Original font size */
+        }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
+        .rating-button.active {
+            background-color: #444444;
+            border-width: 3px;
+            color: white;
+            border: 3px solid #7F65F6;
+            box-shadow: 0 0 10px #7F65F6;
+        }
 
-.rating-buttons {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-}
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            border-color: #7F65F6;
+            font-size: 16px;
+        }
 
-.rating-button {
-    padding: 10px; /* Original padding */
-    background-color: #f0f0f0;
-    color: #272727;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 30px; /* Original width */
-    text-align: center;
-    transition: box-shadow 0.3s;
-    font-size: 14px; /* Original font size */
-}
+        textarea:focus {
+            outline: none;
+            border-color: #7F65F6;
+            box-shadow: 0 0 10px #7F65F6;
+        }
 
-.rating-button.active {
-    background-color: #444444;
-    border-width: 3px;
-    color: white;
-    border: 3px solid #7F65F6;
-    box-shadow: 0 0 10px #7F65F6;
-}
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #7F65F6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-sizing: border-box;
-    background-color: var(--background-color-light);
-    color: var(--text-color-light);
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    border-color: #7F65F6;
-}
+        button:hover {
+            background-color: #7F65F6;
+        }
 
-textarea:focus {
-    outline: none;
-    border-color: #7F65F6;
-    box-shadow: 0 0 10px #7F65F6;
-}
+        textarea.error, .rating-buttons.error {
+            border: 2px solid red;
+        }
 
-body.dark-mode textarea {
-    background-color: var(--background-color-dark);
-    color: var(--text-color-dark);
-    border-color: #7F65F6;
-}
-
-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #7F65F6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #7F65F6;
-}
-
-textarea.error, .rating-buttons.error {
-    border: 2px solid red;
-}
-
-#themeToggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-}
-
-#themeIcon {
-    width: 30px;
-    height: 30px;
-}
-
-/* Responsive design for mobile */
-@media (max-width: 600px) {
-    .rating-button {
-        padding: 5px;
-        width: 20px;
-        font-size: 10px;
-    }
-}
+        /* Responsive design for mobile */
+        @media (max-width: 600px) {
+            .rating-button {
+                padding: 5px;
+                width: 20px;
+                font-size: 10px;
+            }
+            textarea, button {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <button id="themeToggle">
-            <img src="light.png" id="themeIcon" alt="Toggle Light/Dark Mode">
-        </button>
         <h1>Rate Your Pillars</h1>
         <form id="pillarsForm">
             <div class="pillar" id="pillar-template" style="display: none;">
@@ -191,237 +157,232 @@ textarea.error, .rating-buttons.error {
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const pillars = [
-        'Physical',
-        'Mental',
-        'Professional',
-        'Social',
-        'Life Organizational',
-        'Philosophical',
-        'Emotional and Spiritual',
-        'Personal',
-        'Financial',
-        'Recreational'
-    ];
+            console.log("Document loaded"); // Debug log
+            const pillars = [
+                'Physical',
+                'Mental',
+                'Professional',
+                'Social',
+                'Life Organizational',
+                'Philosophical',
+                'Emotional and Spiritual',
+                'Personal',
+                'Financial',
+                'Recreational'
+            ];
 
-    const container = document.getElementById('pillars-container');
-    const template = document.getElementById('pillar-template');
+            const container = document.getElementById('pillars-container');
+            const template = document.getElementById('pillar-template');
 
-    pillars.forEach(pillar => {
-        const clone = template.cloneNode(true);
-        clone.style.display = 'block';
-        clone.id = '';
-        clone.querySelector('.pillar-title').textContent = pillar;
-        
-        const ratingButtonsContainer = clone.querySelector('.rating-buttons');
-        const ratingInput = clone.querySelector('.rating');
+            pillars.forEach(pillar => {
+                const clone = template.cloneNode(true);
+                clone.style.display = 'block';
+                clone.id = '';
+                clone.querySelector('.pillar-title').textContent = pillar;
 
-        for (let i = 1; i <= 10; i++) {
-            const button = document.createElement('div');
-            button.textContent = i;
-            button.classList.add('rating-button');
+                const ratingButtonsContainer = clone.querySelector('.rating-buttons');
+                const ratingInput = clone.querySelector('.rating');
 
-            button.addEventListener('click', function () {
-                const buttons = ratingButtonsContainer.querySelectorAll('.rating-button');
-                buttons.forEach((btn, index) => {
-                    if (index < i) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
+                for (let i = 1; i <= 10; i++) {
+                    const button = document.createElement('div');
+                    button.textContent = i;
+                    button.classList.add('rating-button');
+
+                    button.addEventListener('click', function () {
+                        const buttons = ratingButtonsContainer.querySelectorAll('.rating-button');
+                        buttons.forEach((btn, index) => {
+                            if (index < i) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                        ratingInput.value = i;
+                        ratingButtonsContainer.classList.remove('error');
+                    });
+
+                    ratingButtonsContainer.appendChild(button);
+                }
+
+                const currentTextarea = clone.querySelector('.current');
+                currentTextarea.addEventListener('input', function () {
+                    if (currentTextarea.value.trim() !== '') {
+                        currentTextarea.classList.remove('error');
                     }
                 });
-                ratingInput.value = i;
-                ratingButtonsContainer.classList.remove('error');
+
+                const idealTextarea = clone.querySelector('.ideal');
+                idealTextarea.addEventListener('input', function () {
+                    if (idealTextarea.value.trim() !== '') {
+                        idealTextarea.classList.remove('error');
+                    }
+                });
+
+                container.appendChild(clone);
+            });
+        });
+
+        function generatePDF() {
+            console.log("Generate PDF function called"); // Debug log
+            const form = document.getElementById('pillarsForm');
+            const pillarsData = [];
+            let allFieldsCompleted = true;
+
+            document.querySelectorAll('.pillar').forEach(pillar => {
+                const title = pillar.querySelector('.pillar-title').textContent.trim();
+                if (!title) {
+                    return; // Skip any invalid or empty pillars
+                }
+
+                const rating = pillar.querySelector('.rating').value;
+                const current = pillar.querySelector('.current').value.trim();
+                const ideal = pillar.querySelector('.ideal').value.trim();
+
+                let fieldMissing = false;
+
+                if (!current) {
+                    fieldMissing = true;
+                    pillar.querySelector('.current').classList.add('error');
+                } else {
+                    pillar.querySelector('.current').classList.remove('error');
+                }
+
+                if (!ideal) {
+                    fieldMissing = true;
+                    pillar.querySelector('.ideal').classList.add('error');
+                } else {
+                    pillar.querySelector('.ideal').classList.remove('error');
+                }
+
+                if (rating === "0") {
+                    fieldMissing = true;
+                    pillar.querySelector('.rating-buttons').classList.add('error');
+                } else {
+                    pillar.querySelector('.rating-buttons').classList.remove('error');
+                }
+
+                if (fieldMissing) {
+                    allFieldsCompleted = false;
+                } else {
+                    pillarsData.push({ title, rating, current, ideal });
+                }
             });
 
-            ratingButtonsContainer.appendChild(button);
-        }
-
-        const currentTextarea = clone.querySelector('.current');
-        currentTextarea.addEventListener('input', function () {
-            if (currentTextarea.value.trim() !== '') {
-                currentTextarea.classList.remove('error');
-            }
-        });
-
-        const idealTextarea = clone.querySelector('.ideal');
-        idealTextarea.addEventListener('input', function () {
-            if (idealTextarea.value.trim() !== '') {
-                idealTextarea.classList.remove('error');
-            }
-        });
-
-        container.appendChild(clone);
-    });
-
-    const themeToggleButton = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-
-    themeToggleButton.addEventListener('click', function () {
-        document.body.classList.toggle('dark-mode');
-        if (document.body.classList.contains('dark-mode')) {
-            themeIcon.src = 'dark.png';
-        } else {
-            themeIcon.src = 'light.png';
-        }
-    });
-});
-
-function generatePDF() {
-    const form = document.getElementById('pillarsForm');
-    const pillarsData = [];
-    let allFieldsCompleted = true;
-
-    document.querySelectorAll('.pillar').forEach(pillar => {
-        const title = pillar.querySelector('.pillar-title').textContent.trim();
-        if (!title) {
-            return; // Skip any invalid or empty pillars
-        }
-
-        const rating = pillar.querySelector('.rating').value;
-        const current = pillar.querySelector('.current').value.trim();
-        const ideal = pillar.querySelector('.ideal').value.trim();
-
-        let fieldMissing = false;
-
-        if (!current) {
-            fieldMissing = true;
-            pillar.querySelector('.current').classList.add('error');
-        } else {
-            pillar.querySelector('.current').classList.remove('error');
-        }
-
-        if (!ideal) {
-            fieldMissing = true;
-            pillar.querySelector('.ideal').classList.add('error');
-        } else {
-            pillar.querySelector('.ideal').classList.remove('error');
-        }
-
-        if (rating === "0") {
-            fieldMissing = true;
-            pillar.querySelector('.rating-buttons').classList.add('error');
-        } else {
-            pillar.querySelector('.rating-buttons').classList.remove('error');
-        }
-
-        if (fieldMissing) {
-            allFieldsCompleted = false;
-        } else {
-            pillarsData.push({ title, rating, current, ideal });
-        }
-    });
-
-    if (!allFieldsCompleted) {
-        alert('Please complete all fields.');
-        return;
-    }
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Add logo
-    const logo = new Image();
-    logo.src = 'teka.png'; // Path to your logo file
-    logo.onload = () => {
-        const logoOriginalWidth = logo.width;
-        const logoOriginalHeight = logo.height;
-        const logoMaxWidth = 30; // Adjust the maximum width
-        const logoMaxHeight = 30; // Adjust the maximum height
-        let logoWidth = logoMaxWidth;
-        let logoHeight = logoMaxHeight;
-
-        // Calculate the new dimensions based on the original aspect ratio
-        if (logoOriginalWidth > logoOriginalHeight) {
-            logoHeight = (logoMaxWidth / logoOriginalWidth) * logoOriginalHeight;
-        } else {
-            logoWidth = (logoMaxHeight / logoOriginalHeight) * logoOriginalWidth;
-        }
-
-        const logoX = (doc.internal.pageSize.getWidth() - logoWidth) / 2;
-        const logoY = 10;
-        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
-
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-        // Add title
-        doc.setFontSize(12); // Title font size
-        doc.setFont('helvetica', 'bold');
-        doc.text("The Pillar System", pageWidth / 2, logoY + logoHeight + 10, { align: 'center' });
-
-        // Add header
-        doc.setFontSize(8); // Reduced font size for header
-        doc.setFont('helvetica', 'normal');
-        doc.text(`Date: ${formattedDate}`, pageWidth / 2, logoY + logoHeight + 20, { align: 'center' });
-
-        let y = logoY + logoHeight + 30; // Start below the logo, title, and header
-
-        pillarsData.forEach((pillar, index) => {
-            if (y + 60 > pageHeight) { // Create new page if content overflows
-                doc.addPage();
-                y = 20;
+            if (!allFieldsCompleted) {
+                alert('Please complete all fields.');
+                return;
             }
 
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(10);
-            doc.text(`Pillar: ${pillar.title}`, 20, y);
-            y += 10; // Reduced spacing
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                console.error("jsPDF is not available.");
+                return;
+            }
 
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8);
-            doc.text(`Rating: ${pillar.rating}`, 20, y);
+            const doc = new jsPDF();
 
-            // Draw a simple visual representation of the rating with rounded corners
-            const ratingBarWidth = 50; // Reduced width
-            const filledWidth = ratingBarWidth * (pillar.rating / 10);
-            doc.setDrawColor(0, 0, 0);
-            doc.setFillColor(211, 211, 211);
-            roundedRect(doc, 100, y - 6, ratingBarWidth, 5, 2); // Adjusted size and added radius
-            doc.setFillColor(127, 101, 246); // Changed color to #7F65F6
-            roundedRect(doc, 100, y - 6, filledWidth, 5, 2); // Adjusted size and added radius
+            // Add logo
+            const logo = new Image();
+            logo.src = 'teka.png'; // Path to your logo file
+            logo.onload = () => {
+                const logoOriginalWidth = logo.width;
+                const logoOriginalHeight = logo.height;
+                const logoMaxWidth = 30; // Adjust the maximum width
+                const logoMaxHeight = 30; // Adjust the maximum height
+                let logoWidth = logoMaxWidth;
+                let logoHeight = logoMaxHeight;
 
-            y += 10; // Reduced spacing
-            doc.text(`Current State:`, 20, y);
-            y += 10; // Reduced spacing
-            doc.setFont('helvetica', 'italic');
-            doc.text(doc.splitTextToSize(pillar.current, pageWidth - 40), 20, y);
-            y += doc.getTextDimensions(pillar.current).h / 2 + 10; // Adjusted spacing and size
+                // Calculate the new dimensions based on the original aspect ratio
+                if (logoOriginalWidth > logoOriginalHeight) {
+                    logoHeight = (logoMaxWidth / logoOriginalWidth) * logoOriginalHeight;
+                } else {
+                    logoWidth = (logoMaxHeight / logoOriginalHeight) * logoOriginalWidth;
+                }
 
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Ideal State:`, 20, y);
-            y += 10; // Reduced spacing
-            doc.setFont('helvetica', 'italic');
-            doc.text(doc.splitTextToSize(pillar.ideal, pageWidth - 40), 20, y);
-            y += doc.getTextDimensions(pillar.ideal).h / 2 + 20; // Adjusted spacing and size
+                const logoX = (doc.internal.pageSize.getWidth() - logoWidth) / 2;
+                const logoY = 10;
+                doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
 
-            // Add horizontal line
-            y += 10;
-            doc.setDrawColor(200, 200, 200); // Light gray line color
-            doc.line(10, y, pageWidth - 10, y); // Draw line from margin to margin
-            y += 10;
-        });
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const today = new Date();
+                const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-        // Add footer
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            doc.setFontSize(8);
-            doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, {
-                align: 'center'
-            });
+                // Add title
+                doc.setFontSize(12); // Title font size
+                doc.setFont('helvetica', 'bold');
+                doc.text("The Pillar System", pageWidth / 2, logoY + logoHeight + 10, { align: 'center' });
+
+                // Add header
+                doc.setFontSize(8); // Reduced font size for header
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Date: ${formattedDate}`, pageWidth / 2, logoY + logoHeight + 20, { align: 'center' });
+
+                let y = logoY + logoHeight + 30; // Start below the logo, title, and header
+
+                pillarsData.forEach((pillar, index) => {
+                    if (y + 60 > pageHeight) { // Create new page if content overflows
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(10);
+                    doc.text(`Pillar: ${pillar.title}`, 20, y);
+                    y += 10; // Reduced spacing
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.text(`Rating: ${pillar.rating}`, 20, y);
+
+                    // Draw a simple visual representation of the rating with rounded corners
+                    const ratingBarWidth = 50; // Reduced width
+                    const filledWidth = ratingBarWidth * (pillar.rating / 10);
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setFillColor(211, 211, 211);
+                    roundedRect(doc, 100, y - 6, ratingBarWidth, 5, 2); // Adjusted size and added radius
+                    doc.setFillColor(127, 101, 246); // Changed color to #7F65F6
+                    roundedRect(doc, 100, y - 6, filledWidth, 5, 2); // Adjusted size and added radius
+
+                    y += 10; // Reduced spacing
+                    doc.text(`Current State:`, 20, y);
+                    y += 10; // Reduced spacing
+                    doc.setFont('helvetica', 'italic');
+                    doc.text(doc.splitTextToSize(pillar.current, pageWidth - 40), 20, y);
+                    y += doc.getTextDimensions(pillar.current).h / 2 + 10; // Adjusted spacing and size
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Ideal State:`, 20, y);
+                    y += 10; // Reduced spacing
+                    doc.setFont('helvetica', 'italic');
+                    doc.text(doc.splitTextToSize(pillar.ideal, pageWidth - 40), 20, y);
+                    y += doc.getTextDimensions(pillar.ideal).h / 2 + 20; // Adjusted spacing and size
+
+                    // Add horizontal line
+                    y += 10;
+                    doc.setDrawColor(200, 200, 200); // Light gray line color
+                    doc.line(10, y, pageWidth - 10, y); // Draw line from margin to margin
+                    y += 10;
+                });
+
+                // Add footer
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, {
+                        align: 'center'
+                    });
+                }
+
+                doc.save(`Pillars (${formattedDate}).pdf`);
+            };
+
+            function roundedRect(doc, x, y, width, height, radius) {
+                doc.setDrawColor(211, 211, 211);
+                doc.roundedRect(x, y, width, height, radius, radius, 'FD');
+            }
         }
-
-        doc.save(`Pillars (${formattedDate}).pdf`);
-    };
-
-    function roundedRect(doc, x, y, width, height, radius) {
-        doc.setDrawColor(211, 211, 211);
-        doc.roundedRect(x, y, width, height, radius, radius, 'FD');
-    }
-}
     </script>
 </body>
 </html>

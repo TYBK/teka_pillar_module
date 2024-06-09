@@ -278,6 +278,10 @@
             }
 
             const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                console.error("jsPDF is not defined");
+                return;
+            }
             const doc = new jsPDF();
 
             // Add logo

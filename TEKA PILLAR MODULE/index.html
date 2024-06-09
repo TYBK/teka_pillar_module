@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Pillars Form</title>
+    <!-- Include jsPDF library directly -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -225,7 +226,7 @@
             });
         });
 
-        function generatePDF() {
+        async function generatePDF() {
             console.log("Generate PDF function called"); // Debug log
             const form = document.getElementById('pillarsForm');
             const pillarsData = [];

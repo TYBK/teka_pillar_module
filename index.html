@@ -277,11 +277,18 @@
                 return;
             }
 
-            const { jsPDF } = window.jspdf;
-            if (!jsPDF) {
-                console.error("jsPDF is not defined");
+            // Ensure jsPDF is loaded
+            if (typeof window.jspdf === 'undefined') {
+                console.error("jsPDF is not defined. Please ensure the library is loaded correctly.");
                 return;
             }
+
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                console.error("jsPDF is not available after destructuring.");
+                return;
+            }
+
             const doc = new jsPDF();
 
             // Add logo
